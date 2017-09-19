@@ -1,0 +1,49 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="{% static 'bootstrap/js/jquery-3.2.1.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+    <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+
+</head>
+<style>
+    span{
+        color: red;
+    }
+</style>
+
+<body>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-signin" action="/xiugaimima/" method="post">
+                <h2 class="form-signin-heading">修改密码</h2>
+                <span>{{ errpr }}</span>
+                <label for="inputEmail" class="sr-only">姓名</label>
+                <p>原密码<input type="password" id="inputEmail" class="form-control" name="password" required="" autofocus=""></p>
+                <label for="inputPassword" class="sr-only">密码</label>
+                <p>新密码<input type="password" id="inputPassword" class="form-control" name="new_password" required=""></p>
+                <label for="inputPassword" class="sr-only">密码</label>
+                <p>确认密码<input type="password" id="inputPassword" class="form-control" name="new2_password" required=""></p>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="remember-me"> Remember me
+                    </label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">提交</button>
+            </form>
+        </div>
+    </div>
+
+</div> <!-- /container -->
+
+
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form action="/edit/{{ book_list.id }}" method="post" >
+                <div class="form-group">
+                    <label for="title">书名</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ book_list.title }}">
+                </div>
+                <div class="'form-group">
+                    <label for="price">价格</label>
+                    <input type="text" class="form-control" id="price" name="price" value="{{ book_list.price }}">
+                </div>
+                <div class="form-group">
+                    <label for="author">作者</label>
+                    <select class="form-control" name="authors" id="authors"  multiple>
+                        {% for author in  author_list %}
+                            <option value={{ author.id }}>     {{ author.name }}      </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="classes">分类</label>
+                    <select class="form-control" name="classes" id="classes">
+                        {% for classes  in  classes_list%}
+                            <option value={{ classes.id }}>{{classes.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="publish">出版社</label>
+                    <select class="form-control" name="publish" id="publish">
+                        {% for publish in  publish_list%}
+                            <option value={{ publish.id }}>{{ publish.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <input type="submit" class="btn btn-info">
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

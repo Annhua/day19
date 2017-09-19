@@ -1,0 +1,199 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="{% static 'bootstrap/js/jquery-3.2.1.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+    <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Brand</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">欢迎光临 : {{ request.user }}<span class="sr-only">(current)</span></a></li>
+                <li><a href="/zhuxiao/">注销</a></li>
+                <li class="dropdown">
+                    <a href="/xiugaimima/">修改密码 </a>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+{#                <li><a href="#">注册</a></li>#}
+{#                <li><a href="#">登录</a></li>#}
+
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Panel title</h3>
+        </div>
+        <div class="part">
+            <a href="/index/">
+                <button type="button" data-toggle="modal" class="btn btn-info  add_book " data-target="#my-modal">增加</button>
+            </a>
+        </div>
+
+        <div class="my-table-tool pull-right">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="my-table-search"></label>
+                    <input type="text" class="form-control" id="my-table-search" placeholder="搜索条件">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+        </div>
+        <div class="panel-body">
+            <div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>书名</th>
+                        <th>价格</th>
+                        <th>出版社</th>
+                        <th>作者</th>
+                        <th>分类</th>
+                        <th>操作</th>
+                    </tr>
+                    {% for book in list_all %}
+                        <tr>
+                            <td>{{ book.id }}</td>
+                            <td>{{ book.title }}</td>
+                            <td>{{ book.price }}</td>
+                            <td>{{ book.publisher }}</td>
+                            <td>
+                                {% for foo in book.authors.select_related %}
+                                    {{ foo }}
+
+                                {% endfor %}
+                            </td>
+                            <td>{{ book.classes }}</td>
+                            <td>
+                                <button type="button" class="btn btn-danger deles">删除</button>
+                                |
+                                <a href="/edit/{{ book.id }}"><button type="button" class="btn btn-info">编辑</button></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+
+
+                </table>
+                <div class="row">
+                    <nav aria-label="Page navigation" class="col-md-4 col-md-offset-4">
+                        <!--<nav aria-label="Page navigation" class="push-rihgt">-->
+                        <ul class="pagination">
+                            {% if list_all.has_previous %}
+                                <li><a href="/add/?page={{ list_all.previous_page_number }}">上一页</a></li>
+                            {% else %}
+                                <li class="disabled"><a href="#">上一页</a></li>
+                            {% endif %}
+
+                            {% for num in p_obj.page_range %}
+                                <li><a href="/add/?page={{ num }}">{{ num }}</a></li>
+                            {% endfor %}
+                            {% if list_all.has_next %}
+                                <li><a href="/add/?page={{ list_all.next_page_number }}">下一页</a></li>
+                            {% else %}
+                                <li class="disabled"><a href="#">下一页</a></li>
+                            {% endif %}
+
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+
+    $('.add_book').click(function () {
+        $.ajax({
+            url:'/index/',
+            text:'POST',
+            success:function (data) {
+                data=JSON.parse(data);
+                publish=JSON.parse(data[0]);
+                author=JSON.parse(data[1]);
+                classes=JSON.parse(data[2]);
+                for(var i in publish) {
+                    var $option = $('<option>');
+                    $option.val(i);
+                    $option.text(publish[i]);
+                    $('#publish').append('$option');
+                }
+                for(var j in author) {
+                    var $option2 = $('<option>');
+                    $option2.val(j);
+                    $option2.text(author[j]);
+                    $('#authors').append('$option2');
+                }
+                for(var k in classes) {
+                    var $option3 = $('<option>');
+                    $option3.val(k);
+                    $option3.text(classes[k]);
+                    $('#classes').append('$option3');
+                }
+            }
+        })
+    });
+
+    $('.save').click(function () {
+        var $tr=$('<tr>')
+
+    });
+
+    $('.deles').click(function () {
+        var $ul=$(this).parent().parent();
+        $ul.remove();
+        var id=$ul.children().eq(0).text();
+        $.ajax({
+            url:'/delet/',
+            type:'GET',
+            data:{'id':id},
+            success:function (data) {
+                alert(data)
+            }
+        })
+    })
+
+
+
+
+</script>
+
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+{#<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>#}
+
+
+</body>
+</html>
